@@ -34,3 +34,9 @@ export interface License {
   name: string;
   url: string;
 }
+
+export interface BookmarksType {
+  uuid : string,
+  definition:string,
+  word:string
+}
