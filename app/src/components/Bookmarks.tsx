@@ -1,7 +1,7 @@
 
 function Bookmarks() {
   return (
-    <div>Something goes here....</div>
+    <div>Something goes here</div>
   )
 }
 
