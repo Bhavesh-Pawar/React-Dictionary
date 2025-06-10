@@ -8,8 +8,8 @@ function App() {
   return (
     <BrowserRouter>
     <Routes>
-      <Route path='/bookmarks' element={<> <Navbar /> <Bookmarks /> </>} />
-      <Route path='/*' element={<> <Navbar /> <Dictionary /> </>} />
+      <Route path='/React-Dictionary/bookmarks' element={<> <Navbar /> <Bookmarks /> </>} />
+      <Route path='/React-Dictionary/*' element={<> <Navbar /> <Dictionary /> </>} />
     </Routes>
 
   </BrowserRouter>
