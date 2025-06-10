@@ -38,5 +38,7 @@ export interface License {
 export interface BookmarksType {
   uuid : string,
   definition:string,
-  word:string
+  word:string,
+  phonetic:string,
+  partOfSpeech:string
 }

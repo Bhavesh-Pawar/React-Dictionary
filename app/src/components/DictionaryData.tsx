@@ -13,7 +13,7 @@ function DictionaryData({ dataPromise }: { dataPromise: Promise<DictionaryApiRes
 
   const moreMeanings = (): string[] => {
     let value: string[] = [];
-    data.meanings.map((meaning) => {
+    data?.meanings.map((meaning) => {
       const partOfSpeech = meaning.partOfSpeech;
       meaning.definitions.map((defintion) => {
         value.push(`${partOfSpeech} - ${defintion.definition}`);
@@ -22,8 +22,8 @@ function DictionaryData({ dataPromise }: { dataPromise: Promise<DictionaryApiRes
     return value;
   }
 
-  const checkBookmark = () =>{
-    const wordAvailable = bookmarks.filter((bookmark)=>bookmark.word === data.word);
+  const checkBookmark = () => {
+    const wordAvailable = bookmarks.filter((bookmark) => bookmark.word === data?.word);
     setIsBookmark(wordAvailable.length > 0);
   }
 
@@ -33,12 +33,14 @@ function DictionaryData({ dataPromise }: { dataPromise: Promise<DictionaryApiRes
     if (!isBookmark) {
       setBookmarks([...bookmarks, {
         'uuid': v4(),
-        'word': data.word,
-        'definition': data.meanings[0]?.definitions[0]?.definition
+        'word': data?.word,
+        'definition': data?.meanings[0]?.definitions[0]?.definition,
+        'partOfSpeech': data?.meanings[0]?.partOfSpeech,
+        'phonetic': data?.phonetic
       }])
     }
     else {
-      setBookmarks(bookmarks.filter((bookmark) => bookmark.word !== data.word))
+      setBookmarks(bookmarks.filter((bookmark) => bookmark.word !== data?.word))
     }
   }
 
@@ -53,37 +55,42 @@ function DictionaryData({ dataPromise }: { dataPromise: Promise<DictionaryApiRes
 
   return (
     <>
-      <div className="m-[50px] mx-auto w-md text-center rounded-xl border bg-gray-300 border-gray-300">
-        <div className="text-3xl mt-[5rem]">
-          <span className="font-bold">{data.word.toLocaleUpperCase()}</span> ( <span className="italic">{data.phonetic.replace('/', '').replace('/', '')}</span> )
+      {
+        data && data ? 
+        <div className="m-[50px] mx-auto w-md text-center rounded-xl border bg-gray-300 border-gray-300">
+          <div className="text-3xl mt-[5rem]">
+            <span className="font-bold">{data?.word.toLocaleUpperCase()}</span> ( <span className="italic">{data?.phonetic.replace('/', '').replace('/', '')}</span> )
 
-          <input onChange={handleAddBookmark} className="ms-4 bg-gray-500" type="checkbox" checked={isBookmark} />
-        </div>
-        {
-          !showMeaning ?
-            <>
-              <div className="mx-2 mt-[2.5rem] mb-[5rem] text-start">
-                {data.meanings[0].definitions[0].definition}
+            <input onChange={handleAddBookmark} className="ms-4 bg-gray-500" type="checkbox" checked={isBookmark} />
+          </div>
+          {
+            !showMeaning ?
+              <>
+                <div className="mx-2 mt-[2.5rem] mb-[5rem] text-start">
+                  {data?.meanings[0].definitions[0].definition}
+                </div>
+                <div className="text-indigo-500 text-end mb-[1rem] text-2xl cursor-pointer">
+                  <span onClick={() => setShowMeaning(!showMeaning)}> See More Meanings  <HiArrowNarrowRight style={{ display: 'inline' }} /> </span>
+                </div>
+              </>
+              :
+              <div className="text-start p-[2rem]">
+                <ol className="list-decimal p-2">
+                  {moreMeanings().map((meanings, index) => (
+                    <li className="p-[0.5rem] marker:font-bold" key={index}>
+                      {meanings}
+                    </li>
+                  ))}
+                </ol>
+                <div className="text-indigo-500 text-end mb-[1rem] text-2xl cursor-pointer">
+                  <span onClick={() => setShowMeaning(!showMeaning)}> Back</span>
+                </div>
               </div>
-              <div className="text-indigo-500 text-end mb-[1rem] text-2xl cursor-pointer">
-                <span onClick={() => setShowMeaning(!showMeaning)}> See More Meanings  <HiArrowNarrowRight style={{ display: 'inline' }} /> </span>
-              </div>
-            </>
-            :
-            <div className="text-start p-[2rem]">
-              <ol className="list-decimal p-2">
-                {moreMeanings().map((meanings, index) => (
-                  <li className="p-[0.5rem] marker:font-bold" key={index}>
-                    {meanings}
-                  </li>
-                ))}
-              </ol>
-              <div className="text-indigo-500 text-end mb-[1rem] text-2xl cursor-pointer">
-                <span onClick={() => setShowMeaning(!showMeaning)}> Back</span>
-              </div>
-            </div>
-        }
-      </div >
+          }
+        </div> : 
+        <>Word does not exist..</>
+      }
+
     </>
   )
 }
